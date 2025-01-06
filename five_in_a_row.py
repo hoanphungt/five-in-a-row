@@ -3,11 +3,13 @@ import tkinter as tk
 root = tk.Tk()
 root.title("Five in a Row / Caro Game")
 
-SIZE = 1500
-COLS = 30
-ROWS = 30
-CELL = SIZE // COLS
+WIDTH = root.winfo_screenwidth()
+HEIGHT = root.winfo_screenheight()
+CELL = 50
+ROWS = HEIGHT // CELL
+COLS = WIDTH // CELL
 TURN = "X"
+WINNING_CONDITION = 3
 
 # Board state
 board = [[None for _ in range(COLS)] for _ in range(ROWS)]
@@ -15,15 +17,15 @@ board = [[None for _ in range(COLS)] for _ in range(ROWS)]
 # Winners state
 winners = []
 
-canvas = tk.Canvas(root, width=SIZE, height=SIZE)
+canvas = tk.Canvas(root, width=WIDTH, height=HEIGHT)
 canvas.pack()
 
 
 # Draw the board
 def draw_board():
     for i in range(COLS):
-        canvas.create_line(CELL * i, 0, CELL * i, SIZE, fill="black")
-        canvas.create_line(0, CELL * i, SIZE, CELL * i, fill="black")
+        canvas.create_line(0, CELL * i, WIDTH, CELL * i, fill="black")  # Horizontal lines
+        canvas.create_line(CELL * i, 0, CELL * i, HEIGHT, fill="black")  # Vertical lines
 
 
 # Click function
@@ -42,10 +44,22 @@ def play(event):
     # Check if there is a winner
     winner = detect_winner()
     if winner is not None:
-        print(f"{winner} wins!")
         TURN = "X" if winner == "O" else "O"
         winners.append(winner)
-        canvas.create_text(SIZE // 2, SIZE // 2, text=f"{winner} wins!", font=("Arial", 50))
+        canvas.create_text(100, 100, text=f"{winner} wins!", font=("Arial", 50), anchor="w")
+        # If the winner has won 3 times, end the game
+        if winners.count(winner) == WINNING_CONDITION:
+            x_wins = winners.count("X")
+            o_wins = winners.count("O")
+            canvas.create_text(
+                100, 200, text=f"{winner} wins the game!", font=("Arial", 50), anchor="w"
+            )
+            canvas.create_text(
+                100, 300, text=f"Score: {x_wins} - {o_wins}", font=("Arial", 30), anchor="w"
+            )
+            canvas.unbind("<Button-1>")
+            canvas.bind("<Button-1>", lambda _: root.quit())
+            return
         canvas.unbind("<Button-1>")
         canvas.bind("<Button-1>", restart)
         return
@@ -105,21 +119,6 @@ def restart(_event):
     canvas.bind("<Button-1>", play)
 
 
-def quit():
-    x_wins = winners.count("X")
-    o_wins = winners.count("O")
-    print(f"X wins: {x_wins}")
-    print(f"O wins: {o_wins}")
-    if x_wins > o_wins:
-        print("X wins the game!")
-    elif o_wins > x_wins:
-        print("O wins the game!")
-    else:
-        print("It's a draw!")
-    root.destroy()
-
-
 draw_board()
 canvas.bind("<Button-1>", play)
-root.protocol("WM_DELETE_WINDOW", quit)
 root.mainloop()
