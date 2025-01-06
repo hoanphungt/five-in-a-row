@@ -9,7 +9,7 @@ CELL = 50
 ROWS = HEIGHT // CELL
 COLS = WIDTH // CELL
 TURN = "X"
-WINNING_CONDITION = 3
+WINNING_CONDITION = 3  # Number of wins to end the game
 
 # Board state
 board = [[None for _ in range(COLS)] for _ in range(ROWS)]
@@ -21,14 +21,12 @@ canvas = tk.Canvas(root, width=WIDTH, height=HEIGHT)
 canvas.pack()
 
 
-# Draw the board
 def draw_board():
     for i in range(COLS):
         canvas.create_line(0, CELL * i, WIDTH, CELL * i, fill="black")  # Horizontal lines
         canvas.create_line(CELL * i, 0, CELL * i, HEIGHT, fill="black")  # Vertical lines
 
 
-# Click function
 def play(event):
     global TURN, winners
     col = event.x // CELL
@@ -39,16 +37,17 @@ def play(event):
         return
     board[row][col] = TURN
     canvas.create_text(x_center, y_center, text=TURN, font=("Arial", 20))
-    TURN = "O" if TURN == "X" else "X"
+    TURN = "X" if TURN == "O" else "O"
 
     # Check if there is a winner
     winner = detect_winner()
     if winner is not None:
-        TURN = "X" if winner == "O" else "O"
+        TURN = "X" if winner == "O" else "O"  # Switch turn based on last winner
         winners.append(winner)
         canvas.create_text(100, 100, text=f"{winner} wins!", font=("Arial", 50), anchor="w")
-        # If the winner has won 3 times, end the game
+
         if winners.count(winner) == WINNING_CONDITION:
+            # End the game and display the result
             x_wins = winners.count("X")
             o_wins = winners.count("O")
             canvas.create_text(
@@ -67,12 +66,11 @@ def play(event):
 
 # Helper function to check if the winner is blocked
 def is_blocked(row, col, current) -> bool:
-    if row < 0 or row > ROWS - 1 or col < 0 or col > COLS - 1:
+    if row < 0 or row > ROWS or col < 0 or col > COLS:
         return False
     return board[row][col] is not None and board[row][col] != current
 
 
-# Detect winner
 def detect_winner() -> str | None:
     for row in range(ROWS):
         for col in range(COLS):
