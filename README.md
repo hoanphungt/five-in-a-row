@@ -3,7 +3,7 @@
 A Python implementation of the Vietnamese game: **Five in a Row** or **Caro Game**,
 built with the Tkinter library. The game is played on a 30x30 grid and allows two players
 to take turns placing their marks (X and O). The first player to get an unblocked sequence
-of five in a row wins the game.
+of five in a row wins the game. The first player to reach 3 wins first wins the match.
 
 
 ### Features
@@ -12,7 +12,8 @@ of five in a row wins the game.
 - **Win Detection**: Automatically checks for a winner after every move.
 - **Blocked Rule**: A sequence of five that is blocked on both ends does not count as a win.
 - **Restart Option**: After a win, players can restart the game by clicking on the board.
-- **Score Tracking**: Displays the total wins for each player when quitting the game.
+- **Score Tracking**: Displays the total wins for each player when the game is finished.
+- **Winning Condition**: Player needs to win 3 games from the opponent to win the match.
 
 
 ### How to Play
@@ -29,7 +30,7 @@ of five in a row wins the game.
 
 4. **Restart**: After a win is announced, click on the board to reset the game.
 
-5. **Quit**: Close the window to see the total wins for each player.
+5. **Finish**: The first player to reach 3 wins will win the match and the game is finished.
 
 
 ### How to Run
@@ -57,14 +58,14 @@ of five in a row wins the game.
 - **Restart and Quit**:
     
     * The game restarts when clicking the board after a win.
-    * Total scores are displayed when the game is closed.
+    * Total scores are displayed when the game is finished.
+    * The game is closed automatically when the game is finished.
 
 
 ### Customization
 
-- **Board Size**: Adjust the number of rows and columns by changing ROWS and COLS.
+- **Board Size**: Adjust WIDTH and HEIGHT to customize the size of the board.
 - **Cell Size**: Modify the size of each cell by adjusting the CELL variable.
-- **Font Size**: Change the text size in the canvas.create_text calls.
 
 
 #### Author
